@@ -5,6 +5,8 @@ import { toast } from "react-toastify";
 import { fauna } from "../../lib/api";
 import randomId from "../../lib/randomId";
 import ReactModal from "react-modal";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 ReactModal.setAppElement("#__next");
 
 const PostPopup = () => {
@@ -31,8 +33,19 @@ const PostPopup = () => {
     });
     if (!userMadeChanges) setUserMadeChanges(true);
   };
+  const handleChangeDate = (date) => {
+    console.log("date:", date);
+    setFields({
+      ...fields,
+      date,
+    });
+    if (!userMadeChanges) setUserMadeChanges(true);
+  };
   const validateInput = () => {
     if (!fields.title) return "Please provide a title";
+    if (!fields.location) return "Please provide a location";
+    if (!fields.date) return "Please provide a date";
+    if (!fields.description) return "Please provide a description";
 
     return false;
   };
@@ -169,13 +182,10 @@ const PostPopup = () => {
             onChange={handleChange}
           />
 
-          <label>Date</label>
-          <input
-            type="text"
-            id="date"
-            name="date"
-            value={fields.date}
-            onChange={handleChange}
+          <label>Before when?</label>
+          <DatePicker
+            selected={fields.date}
+            onChange={(date) => handleChangeDate(date)}
           />
 
           <label>Description</label>

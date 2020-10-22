@@ -74,9 +74,6 @@ export const createUser = ({ email, username, password }) => {
 				_id
 				username
 				email
-				jobTitle
-				bio
-				confirmed
 			}
 		}`,
     process.env.FAUNADB_SECRET_KEY
