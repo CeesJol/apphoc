@@ -9,6 +9,7 @@ type Post {
   title: String
   date: String
   location: String
+  description: String
 }
 
 type AuthPayload {
@@ -18,6 +19,7 @@ type AuthPayload {
 
 type Query {
   users: [User]
+  posts: [Post]
   userByEmail(email: String!): User
   postByTitle(title: String!): Post
 }

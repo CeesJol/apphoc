@@ -15,7 +15,11 @@ import {
 const POST_DATA = `_id
 title
 location
-date`;
+date
+description
+user {
+	_id
+}`;
 
 // User data request data used by getUserByEmail and readUser
 const USER_DATA = `_id
@@ -121,6 +125,78 @@ export const getUserByEmail = async ({ email }, secret) => {
   );
 };
 
+/** |----------------------------
+ *  | POSTS
+ *  |----------------------------
+ */
+export const getPosts = async () => {
+  console.log("getPosts request");
+  return executeQuery(
+    `query getPosts {
+			posts {
+				data {
+					${POST_DATA}
+				}
+			}
+		}`,
+    process.env.FAUNADB_SECRET_KEY
+  );
+};
+
+export const createPost = async ({ userId, data }, secret) => {
+  console.log("createPost request");
+  const { pairs, keys } = stringifyObject(data);
+
+  return executeQuery(
+    `mutation CreatePost {
+			createPost(data: {
+				${pairs}
+				user: { connect: "${userId}" }
+			}) {
+				_id
+				user {
+					_id
+				}
+				${keys}
+			}
+		}`,
+    secret
+  );
+};
+
+export const updatePost = async ({ id, data }, secret) => {
+  console.log("updatePost request", id, data);
+  const { pairs, keys } = stringifyObject(data);
+  return executeQuery(
+    `mutation UpdatePost {
+			updatePost(id: "${id}", data: {
+				${pairs}
+			}) {
+				_id
+				${keys}
+			}
+		}`,
+    secret
+  );
+};
+
+export const deletePost = async ({ id }, secret) => {
+  console.log("deletePost request");
+  return executeQuery(
+    `mutation DeletePost {
+			deletePost(id: "${id}") {
+				_id
+			}
+		}`,
+    secret
+  );
+};
+
+/** |----------------------------
+ *  | MISC
+ *  |----------------------------
+ */
+
 export const faultyQuery = async () => {
   console.log("faultyQuery request");
   // try {
@@ -210,7 +286,21 @@ const fauna = async (req, res) => {
       case "GET_USER_BY_EMAIL":
         result = await getUserByEmail(req.body, userSecret);
         break;
-
+      // ----------
+      // POSTS
+      // ----------
+      case "GET_POSTS":
+        result = await getPosts();
+        break;
+      case "CREATE_POST":
+        result = await createPost(req.body, userSecret);
+        break;
+      case "UPDATE_POST":
+        result = await updatePost(req.body, userSecret);
+        break;
+      case "DELETE_POST":
+        result = await deletePost(req.body, userSecret);
+        break;
       // ----------
       // MISC
       // ----------

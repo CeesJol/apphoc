@@ -42,8 +42,48 @@ const UserContextProvider = (props) => {
     setUser((prevUser) => ({ ...prevUser, ...data }));
   };
   /**
+   * POSTS
+   */
+  const [posts, setPosts] = useState(null);
+  const [editingPost, setEditingPost] = useState(null);
+  const resetPopups = () => {
+    setEditingPost(null);
+    setWarning(false);
+  };
+  const storePost = (postData, { add, del, newId }) => {
+    if (del) {
+      // Delete post
+      let newPosts = posts.filter((x) => x._id !== postData._id);
+      reset();
+      setPosts(newPosts);
+      resetPopups();
+      return;
+    } else if (add) {
+      // Add post
+      setPosts([...posts, postData]);
+      resetPopups();
+      return;
+    }
+
+    posts.forEach((post, r) => {
+      if (post._id === postData._id) {
+        if (newId) {
+          posts[r]._id = newId;
+          setEditingPost(posts[r]);
+        } else {
+          const newPost = { ...post, ...postData };
+          posts[r] = newPost;
+          setEditingPost(newPost);
+        }
+      }
+    });
+
+    resetPopups();
+  };
+  /**
    * MISC
    */
+  const [warning, setWarning] = useState(false);
   const reset = () => {
     setNav(0);
   };
@@ -95,6 +135,14 @@ const UserContextProvider = (props) => {
         nav,
         setNav,
         reset,
+        editingPost,
+        setEditingPost,
+        storePost,
+        posts,
+        setPosts,
+        warning,
+        setWarning,
+        resetPopups,
       }}
     >
       {props.children}
