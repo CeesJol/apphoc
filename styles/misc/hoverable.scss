@@ -1,0 +1,20 @@
+.hoverable {
+  // Remove weird effect where after 'transform: scale' the left pixel column is cut off
+  // padding-left: 1px;
+
+  @include hover;
+}
+
+.action {
+  cursor: pointer;
+  display: inline-flex;
+  line-height: 1 !important;
+  margin: 0;
+  padding: 0;
+  font-style: italic;
+  color: blue;
+}
+
+.action[disabled] > i {
+  color: lighten($light-grey-3, 10%);
+}

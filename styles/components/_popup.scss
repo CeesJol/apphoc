@@ -1,0 +1,56 @@
+.popup-container {
+  position: fixed;
+  background-color: rgba(black, 0.4);
+  width: 100vw;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 12;
+}
+
+.popup {
+  background-color: white;
+  border: 1px solid $light-grey-2;
+  border-radius: 3px;
+  padding: $l-size;
+  margin: $l-size $m-size;
+  overflow: auto;
+  width: 100%;
+  max-width: calc(#{$max-width} - 3rem);
+  height: auto;
+  max-height: calc(100vh - 3rem);
+  z-index: 13;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+
+    &--close {
+      font-size: 2rem !important;
+      cursor: pointer;
+      color: grey;
+
+      // Add padding around close button to make it easier to click
+      padding: $l-size;
+      margin: -#{$l-size} -#{$l-size} 0 0;
+    }
+  }
+
+  &--medium {
+    width: 40rem;
+    text-align: center;
+  }
+
+  &--small {
+    width: 25rem;
+    text-align: center;
+  }
+}
+
+// Disable scroll when modal is open
+.ReactModal__Body--open {
+  overflow-y: hidden;
+}

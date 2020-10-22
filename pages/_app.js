@@ -1,7 +1,50 @@
-import '../styles/globals.css'
+import React from "react";
+import App from "next/app";
+import Head from "next/head";
+import UserContextProvider from "../contexts/userContext";
+import { ToastContainer } from "react-toastify";
 
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+import "../styles/index.scss";
+// import "font-awesome/css/font-awesome.min.css";
+// import "react-image-crop/lib/ReactCrop.scss";
+import "react-toastify/dist/ReactToastify.css";
+
+class MyApp extends App {
+  render() {
+    const { Component, pageProps } = this.props;
+    return (
+      <div>
+        <div>
+          <Head>
+            <script
+              async
+              src="https://www.googletagmanager.com/gtag/js?id=G-VJYNM0YD3K"
+            ></script>
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+									window.dataLayer = window.dataLayer || [];
+									function gtag(){dataLayer.push(arguments);}
+									gtag('js', new Date());
+
+									gtag('config', 'G-VJYNM0YD3K');
+								`,
+              }}
+            />
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1"
+            />
+            <title>AppHoc</title>
+          </Head>
+        </div>
+        <UserContextProvider>
+          <ToastContainer />
+          <Component {...pageProps} />
+        </UserContextProvider>
+      </div>
+    );
+  }
 }
 
-export default MyApp
+export default MyApp;
