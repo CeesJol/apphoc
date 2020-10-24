@@ -17,6 +17,7 @@ title
 location
 date
 description
+status
 user {
 	_id
 }`;

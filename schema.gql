@@ -10,6 +10,7 @@ type Post {
   date: String
   location: String
   description: String
+  status: String
 }
 
 type AuthPayload {

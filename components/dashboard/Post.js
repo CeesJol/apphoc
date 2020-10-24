@@ -17,6 +17,19 @@ const Post = ({ post }) => {
     }
     return date.substring(0, 10);
   };
+  const drawStatus = (status) => {
+    console.log("status:", status);
+    switch (status) {
+      case "OPEN":
+        return <p style={{ color: "green" }}>Status: open</p>;
+      case "TAKEN":
+        return <p style={{ color: "orange" }}>Status: taken</p>;
+      case "COMPLETED":
+        return <p style={{ color: "red" }}>Status: completed</p>;
+      default:
+        return <></>;
+    }
+  };
   return (
     <div className="dashboard__item">
       <h4 className="dashboard__item--title">{post.title}</h4>
@@ -24,6 +37,7 @@ const Post = ({ post }) => {
         Before {getReadableDate(post.date)} - {post.location}
       </i>
       <p>{post.description}</p>
+      {drawStatus(post.status)}
       {post.user._id === getUser()._id && (
         <a onClick={handleEditPost}>Edit this post</a>
       )}

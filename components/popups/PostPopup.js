@@ -62,6 +62,7 @@ const PostPopup = () => {
     let myData = {
       ...editingPost,
       ...fields,
+      status: "OPEN",
       _id: tempId,
     };
     // Add local copy
