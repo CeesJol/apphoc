@@ -11,6 +11,7 @@ type Post {
   location: String
   description: String
   status: String
+  offers: [User] @relation
 }
 
 type AuthPayload {

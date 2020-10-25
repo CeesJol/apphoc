@@ -16,7 +16,7 @@ const Signup = () => {
     await fauna({ type: "LOGIN_USER", email, password }).then(
       async (data) => {
         setAuth(true);
-        console.log("getUserByEmail", data);
+        console.info("getUserByEmail", data);
         storeUser(data);
         const id = data._id;
         localStorage.setItem("userId", JSON.stringify(id));
@@ -37,7 +37,7 @@ const Signup = () => {
       },
       (err) => {
         toast.error(`⚠️ ${err}`);
-        console.log("signup err", err);
+        console.info("signup err", err);
       }
     );
   };

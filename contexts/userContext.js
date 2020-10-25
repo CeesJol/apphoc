@@ -9,7 +9,6 @@ const UserContextProvider = (props) => {
   /**
    * USER
    */
-  const [dummy, setDummy] = useState(false);
   const [user, setUser] = useState(null);
   const [auth, setAuth] = useState(false);
   const [nav, setNav] = useState(0);
@@ -18,10 +17,10 @@ const UserContextProvider = (props) => {
     return user;
   };
   const clearUser = () => {
-    console.log("clearUser");
+    console.info("clearUser");
 
     const userId = JSON.parse(localStorage.getItem("userId"));
-    console.log("userId", userId);
+    console.info("userId", userId);
 
     // Get user away from dashboard
     if (Router.pathname.startsWith("/dashboard")) {
@@ -46,8 +45,10 @@ const UserContextProvider = (props) => {
    */
   const [posts, setPosts] = useState(null);
   const [editingPost, setEditingPost] = useState(null);
+  const [editingOffer, setEditingOffer] = useState(null);
   const resetPopups = () => {
     setEditingPost(null);
+    setEditingOffer(null);
     setWarning(false);
   };
   const storePost = (postData, { add, del, newId }) => {
@@ -74,6 +75,8 @@ const UserContextProvider = (props) => {
           const newPost = { ...post, ...postData };
           posts[r] = newPost;
           setEditingPost(newPost);
+          console.info("newPost:", newPost);
+          forceRender();
         }
       }
     });
@@ -86,6 +89,10 @@ const UserContextProvider = (props) => {
   const [warning, setWarning] = useState(false);
   const reset = () => {
     setNav(0);
+  };
+  const [dummy, setDummy] = useState(false);
+  const forceRender = () => {
+    setDummy(!dummy);
   };
   useEffect(() => {
     if (user == null) {
@@ -100,7 +107,7 @@ const UserContextProvider = (props) => {
               return;
             }
             storeUser(data.findUserByID);
-            console.log("readUser");
+            console.info("readUser");
             console.table(data.findUserByID);
 
             setAuth(true);
@@ -113,7 +120,7 @@ const UserContextProvider = (props) => {
         );
       } else {
         // There is no user data
-        console.log("No user data");
+        console.info("No user data");
         clearUser();
       }
     }
@@ -137,6 +144,8 @@ const UserContextProvider = (props) => {
         reset,
         editingPost,
         setEditingPost,
+        editingOffer,
+        setEditingOffer,
         storePost,
         posts,
         setPosts,

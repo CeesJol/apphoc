@@ -25,6 +25,9 @@ const PostPopup = () => {
     location: "",
     date: "",
     description: "",
+    offers: {
+      data: [],
+    },
   });
   const handleChange = (event) => {
     setFields({
@@ -34,7 +37,6 @@ const PostPopup = () => {
     if (!userMadeChanges) setUserMadeChanges(true);
   };
   const handleChangeDate = (date) => {
-    console.log("date:", date);
     setFields({
       ...fields,
       date,
@@ -62,10 +64,12 @@ const PostPopup = () => {
     let myData = {
       ...editingPost,
       ...fields,
+      date: fields.date.toString(),
       status: "OPEN",
       _id: tempId,
     };
-    // Add local copy
+
+    // Create local copy
     storePost(
       {
         ...myData,
@@ -83,7 +87,7 @@ const PostPopup = () => {
       (data) => {
         // Remove temp (local)
         storePost({ _id: tempId }, { del: true });
-        // Add data based on db
+        // Create data based on db
         storePost(data.createPost, { add: true });
         toast.success("Post created successfully!");
       },
@@ -143,6 +147,7 @@ const PostPopup = () => {
           title: editingPost.title || "",
           location: editingPost.location || "",
           date: editingPost.date || "",
+          description: editingPost.description || "",
         });
       }
     }
@@ -185,7 +190,7 @@ const PostPopup = () => {
 
           <label>Before when?</label>
           <DatePicker
-            selected={fields.date}
+            selected={Date.parse(fields.date)}
             onChange={(date) => handleChangeDate(date)}
           />
 
@@ -209,7 +214,7 @@ const PostPopup = () => {
               />
             </>
           ) : (
-            <Button text="Add" altText="Adding..." fn={handleCreate} />
+            <Button text="Create" altText="Creating..." fn={handleCreate} />
           )}
         </div>
       </form>

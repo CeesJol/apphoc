@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "dotenv": "^8.2.0",
+    "font-awesome": "^4.7.0",
     "jsonwebtoken": "^8.5.1",
     "next": "9.5.5",
     "react": "17.0.0",

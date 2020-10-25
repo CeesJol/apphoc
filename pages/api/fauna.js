@@ -20,24 +20,26 @@ description
 status
 user {
 	_id
+}
+offers {
+	data {
+		_id
+		username
+	}
 }`;
 
 // User data request data used by getUserByEmail and readUser
 const USER_DATA = `_id
 username
 email
-posts {
-	data {
-		${POST_DATA}
-	}
-}`;
+`;
 
 /** |----------------------------
  *  | USER
  *  |----------------------------
  */
 export const loginUser = ({ email, password }) => {
-  console.log("loginUser request");
+  console.info("loginUser request");
   email = email.toLowerCase();
   const validationError = validateLogin(email, password);
   if (validationError) return [{ message: validationError }];
@@ -55,7 +57,7 @@ export const loginUser = ({ email, password }) => {
 };
 
 export const logoutUser = (secret) => {
-  console.log("logoutUser request");
+  console.info("logoutUser request");
   return executeQuery(
     `mutation LogoutUser {
 			logoutUser
@@ -65,7 +67,7 @@ export const logoutUser = (secret) => {
 };
 
 export const createUser = ({ email, username, password }) => {
-  console.log("createUser request");
+  console.info("createUser request");
   email = email.toLowerCase();
   const validationError = validateSignup(email, username, password);
   if (validationError) return [{ message: validationError }];
@@ -82,7 +84,7 @@ export const createUser = ({ email, username, password }) => {
 };
 
 export const updateUser = async ({ id, data }, secret) => {
-  console.log("updateUser request", id, data);
+  console.info("updateUser request", id, data);
   if (data.email) data.email.toLowerCase();
   const { pairs, keys } = stringifyObject(data);
   return executeQuery(
@@ -99,7 +101,7 @@ export const updateUser = async ({ id, data }, secret) => {
 };
 
 export const readUser = async ({ id }, secret) => {
-  console.log("readUser request");
+  console.info("readUser request");
   return executeQuery(
     `query FindAUserByID {
 			findUserByID(id: "${id}") {
@@ -111,7 +113,7 @@ export const readUser = async ({ id }, secret) => {
 };
 
 export const getUserByEmail = async ({ email }, secret) => {
-  console.log("getUserByEmail request");
+  console.info("getUserByEmail request");
   email = email.toLowerCase();
   return executeQuery(
     `query FindAUserByEmail {
@@ -128,7 +130,7 @@ export const getUserByEmail = async ({ email }, secret) => {
  *  |----------------------------
  */
 export const getPosts = async () => {
-  console.log("getPosts request");
+  console.info("getPosts request");
   return executeQuery(
     `query getPosts {
 			posts {
@@ -142,8 +144,9 @@ export const getPosts = async () => {
 };
 
 export const createPost = async ({ userId, data }, secret) => {
-  console.log("createPost request");
+  console.info("createPost request");
   const { pairs, keys } = stringifyObject(data);
+  console.info("pairs:", pairs);
 
   return executeQuery(
     `mutation CreatePost {
@@ -163,7 +166,7 @@ export const createPost = async ({ userId, data }, secret) => {
 };
 
 export const updatePost = async ({ id, data }, secret) => {
-  console.log("updatePost request", id, data);
+  console.info("updatePost request", id, data);
   const { pairs, keys } = stringifyObject(data);
   return executeQuery(
     `mutation UpdatePost {
@@ -179,7 +182,7 @@ export const updatePost = async ({ id, data }, secret) => {
 };
 
 export const deletePost = async ({ id }, secret) => {
-  console.log("deletePost request");
+  console.info("deletePost request");
   return executeQuery(
     `mutation DeletePost {
 			deletePost(id: "${id}") {
@@ -190,13 +193,55 @@ export const deletePost = async ({ id }, secret) => {
   );
 };
 
+export const createOffer = async ({ postId, userId }) => {
+  console.info("createOffer request");
+  return executeQuery(
+    `mutation AddOffer {
+			updatePost(id: "${postId}", data: {
+				offers: { connect: "${userId}"}
+			}) {
+				_id
+				offers {
+					data {
+						_id
+						username
+					}
+				}
+				title
+			}
+		}`,
+    process.env.FAUNADB_SECRET_KEY
+  );
+};
+
+export const removeOffer = async ({ postId, userId }) => {
+  console.info("removeOffer request");
+  return executeQuery(
+    `mutation RemoveOffer {
+			updatePost(id: "${postId}", data: {
+				offers: { disconnect: "${userId}"}
+			}) {
+				_id
+				offers {
+					data {
+						_id
+						username
+					}
+				}
+				title
+			}
+		}`,
+    process.env.FAUNADB_SECRET_KEY
+  );
+};
+
 /** |----------------------------
  *  | MISC
  *  |----------------------------
  */
 
 export const faultyQuery = async () => {
-  console.log("faultyQuery request");
+  console.info("faultyQuery request");
   // try {
   //   throw new Error("NO.");
   // } catch (err) {
@@ -236,7 +281,7 @@ const fauna = async (req, res) => {
       userSecret = jwt.verify(userSecretEncrypted, process.env.COOKIE_SECRET)
         .token;
     } catch (e) {
-      console.log("Error: invalid authentication token: ", e);
+      console.info("Error: invalid authentication token: ", e);
       deleteCookie();
       result = [{ message: "Error: invalid authentication token" }];
       res.end(JSON.stringify(result));
@@ -257,7 +302,7 @@ const fauna = async (req, res) => {
           // Set secret cookie
           const encryptedToken = jwt.sign(
             {
-              token: result.loginUser.token,
+              token: result.infoinUser.token,
             },
             process.env.COOKIE_SECRET
           );
@@ -265,7 +310,7 @@ const fauna = async (req, res) => {
             `secret=${encryptedToken}; HttpOnly; Max-Age=${COOKIE_MAX_AGE}`,
           ]);
           // Don't send token to user
-          result = result.loginUser.user;
+          result = result.infoinUser.user;
         }
         break;
       case "LOGOUT_USER":
@@ -283,6 +328,12 @@ const fauna = async (req, res) => {
         break;
       case "GET_USER_BY_EMAIL":
         result = await getUserByEmail(req.body, userSecret);
+        break;
+      case "CREATE_OFFER":
+        result = await createOffer(req.body);
+        break;
+      case "REMOVE_OFFER":
+        result = await removeOffer(req.body);
         break;
       // ----------
       // POSTS

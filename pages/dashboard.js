@@ -5,6 +5,7 @@ import Posts from "../components/dashboard/Posts";
 import { UserContext } from "../contexts/userContext";
 import LoadingPopup from "../components/popups/LoadingPopup";
 import PostPopup from "../components/popups/PostPopup";
+import OfferPopup from "../components/popups/OfferPopup";
 import Warning from "../components/popups/Warning";
 import Button from "../components/general/Button";
 
@@ -15,6 +16,7 @@ const Dashboard = () => {
     loggingOut,
     editingPost,
     setEditingPost,
+    editingOffer,
     warning,
   } = useContext(UserContext);
   if (loggingOut) return <LoadingPopup text={`Logging out...`} />;
@@ -39,6 +41,7 @@ const Dashboard = () => {
         </div>
       </main>
       {editingPost && <PostPopup />}
+      {editingOffer && <OfferPopup />}
       {warning && <Warning />}
     </div>
   );
