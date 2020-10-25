@@ -95,6 +95,7 @@ const UserContextProvider = (props) => {
     setDummy(!dummy);
   };
   useEffect(() => {
+    // Authenticate user
     if (user == null) {
       const userId = JSON.parse(localStorage.getItem("userId"));
       if (userId != null) {
@@ -123,6 +124,18 @@ const UserContextProvider = (props) => {
         console.info("No user data");
         clearUser();
       }
+    }
+    // Load posts
+    if (!posts) {
+      fauna({ type: "GET_POSTS" }).then(
+        (data) => {
+          setPosts(data.posts.data);
+        },
+        (err) => {
+          toast.error("Could not retrieve posts. Please try again");
+          console.error("Failed getting posts", err);
+        }
+      );
     }
   }, [user]);
   return (

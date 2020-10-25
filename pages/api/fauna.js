@@ -302,7 +302,7 @@ const fauna = async (req, res) => {
           // Set secret cookie
           const encryptedToken = jwt.sign(
             {
-              token: result.infoinUser.token,
+              token: result.loginUser.token,
             },
             process.env.COOKIE_SECRET
           );
@@ -310,7 +310,7 @@ const fauna = async (req, res) => {
             `secret=${encryptedToken}; HttpOnly; Max-Age=${COOKIE_MAX_AGE}`,
           ]);
           // Don't send token to user
-          result = result.infoinUser.user;
+          result = result.loginUser.user;
         }
         break;
       case "LOGOUT_USER":
@@ -360,7 +360,25 @@ const fauna = async (req, res) => {
         result = [{ message: "Error: No such type in /api/fauna: " + type }];
     }
   } catch (e) {
-    result = [{ message: e }];
+    // Magic to stringify error using JSON.stringify
+    // Source
+    // https://stackoverflow.com/questions/18391212/is-it-not-possible-to-stringify-an-error-using-json-stringify
+    if (!("toJSON" in Error.prototype))
+      Object.defineProperty(Error.prototype, "toJSON", {
+        value: function () {
+          var alt = {};
+
+          Object.getOwnPropertyNames(this).forEach(function (key) {
+            alt[key] = this[key];
+          }, this);
+
+          return alt;
+        },
+        configurable: true,
+        writable: true,
+      });
+
+    result = [e];
   }
   res.end(JSON.stringify(result));
 };

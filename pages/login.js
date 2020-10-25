@@ -19,9 +19,7 @@ const Login = () => {
         setAuth(true);
         console.info("loginUser", data);
         storeUser(data);
-        const id = data._id;
-        storeUser({ id });
-        localStorage.setItem("userId", JSON.stringify(id));
+        localStorage.setItem("userId", JSON.stringify(data._id));
         Router.push("/dashboard");
       },
       (err) => {
