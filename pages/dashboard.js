@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import DashboardHeader from "../components/dashboard/DashboardHeader";
 import Nav from "../components/dashboard/Nav";
 import Posts from "../components/dashboard/Posts";
+import YourPosts from "../components/dashboard/YourPosts";
 import { UserContext } from "../contexts/userContext";
 import LoadingPopup from "../components/popups/LoadingPopup";
 import PostPopup from "../components/popups/PostPopup";
@@ -36,6 +37,7 @@ const Dashboard = () => {
             <div className="dashboard__main__content">
               <Button text="Create post" fn={handleCreatePost} />
               {nav == 0 && <Posts />}
+              {nav == 1 && <YourPosts />}
             </div>
           </div>
         </div>

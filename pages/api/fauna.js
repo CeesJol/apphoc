@@ -146,7 +146,6 @@ export const getPosts = async () => {
 export const createPost = async ({ userId, data }, secret) => {
   console.info("createPost request");
   const { pairs, keys } = stringifyObject(data);
-  console.info("pairs:", pairs);
 
   return executeQuery(
     `mutation CreatePost {
@@ -166,7 +165,7 @@ export const createPost = async ({ userId, data }, secret) => {
 };
 
 export const updatePost = async ({ id, data }, secret) => {
-  console.info("updatePost request", id, data);
+  console.info("updatePost request");
   const { pairs, keys } = stringifyObject(data);
   return executeQuery(
     `mutation UpdatePost {

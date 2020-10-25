@@ -55,7 +55,6 @@ const UserContextProvider = (props) => {
     if (del) {
       // Delete post
       let newPosts = posts.filter((x) => x._id !== postData._id);
-      reset();
       setPosts(newPosts);
       resetPopups();
       return;

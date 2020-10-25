@@ -89,7 +89,7 @@ const PostPopup = () => {
         storePost({ _id: tempId }, { del: true });
         // Create data based on db
         storePost(data.createPost, { add: true });
-        toast.success("Post created successfully!");
+        console.info("Post created successfully!");
       },
       (err) => toast.error(`Error: failed to save: ${err}`)
     );
@@ -109,7 +109,7 @@ const PostPopup = () => {
       id: myData._id,
       data: myData,
     }).then(
-      (data) => toast.success("Post updated successfully!"),
+      () => console.info("Post updated successfully!"),
       (err) => toast.error(`Error: failed to save: ${err}`)
     );
   };
@@ -121,7 +121,7 @@ const PostPopup = () => {
         storePost(editingPost, { del: true });
 
         fauna({ type: "DELETE_POST", id: editingPost._id }).then(
-          () => toast.success("Post deleted successfully!"),
+          () => console.info("Post deleted successfully!"),
           (err) => toast.error(`Error: failed to save: ${err}`)
         );
       },
