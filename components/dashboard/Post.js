@@ -27,8 +27,8 @@ const Post = ({ post }) => {
         return <></>;
     }
   };
-  const drawOffer = (offer, index) => {
-    return offer.username + (index < post.offers.data.length - 1 ? ", " : "");
+  const drawOffer = (offer) => {
+    return <li>{offer.username}</li>;
   };
   return (
     <div className="dashboard__item">
@@ -39,15 +39,22 @@ const Post = ({ post }) => {
       </i>
       <p>{post.description}</p>
 
-      {post.offers && post.offers.data.length > 0 ? (
-        <p>
-          Offers from: {post.offers.data.map((offer, i) => drawOffer(offer, i))}
-        </p>
-      ) : (
+      {!post.offers || !post.offers.data.length ? (
+        // There are no offers
         <p>
           <i>No offers have been placed yet</i>
         </p>
+      ) : post.user._id === getUser()._id ? (
+        // This is your own post, show the offers
+        <>
+          <p>Offers from:</p>
+          <ul>{post.offers.data.map((offer) => drawOffer(offer))}</ul>
+        </>
+      ) : (
+        // This is someone else's post, show the number of offers
+        <p>Number of offers: {post.offers.data.length}</p>
       )}
+
       {post.user._id === getUser()._id ? (
         // This is your own post
         <a onClick={handleEditPost}>Edit this post</a>

@@ -128,6 +128,7 @@ const UserContextProvider = (props) => {
     if (!posts) {
       fauna({ type: "GET_POSTS" }).then(
         (data) => {
+          console.log("data.posts.data:", data.posts.data);
           setPosts(data.posts.data);
         },
         (err) => {

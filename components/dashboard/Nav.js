@@ -4,7 +4,7 @@ import { UserContext } from "../../contexts/userContext";
 
 const Nav = () => {
   const { nav, setNav } = useContext(UserContext);
-  const navItems = ["Posts", "Your posts"];
+  const navItems = ["Posts", "Your posts", "Your offers"];
   return (
     <div className="dashboard__nav">
       <div className="dashboard__nav__content">
