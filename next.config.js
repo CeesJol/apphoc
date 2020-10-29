@@ -6,6 +6,6 @@ module.exports = {
     COOKIE_SECRET: process.env.COOKIE_SECRET,
     FAUNADB_GRAPHQL_ENDPOINT: "https://graphql.fauna.com/graphql",
     DOMAIN_NAME: "https://apphoc.vercel.app",
-    APP_NAME: "AppHoc",
+    APP_NAME: "Jumpstart Connections",
   },
 };
