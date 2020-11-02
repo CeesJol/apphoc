@@ -46,9 +46,11 @@ const UserContextProvider = (props) => {
   const [posts, setPosts] = useState(null);
   const [editingPost, setEditingPost] = useState(null);
   const [editingOffer, setEditingOffer] = useState(null);
+  const [viewingOffer, setViewingOffer] = useState(null);
   const resetPopups = () => {
     setEditingPost(null);
     setEditingOffer(null);
+    setViewingOffer(null);
     setWarning(false);
   };
   const storePost = (postData, { add, del, newId }) => {
@@ -159,6 +161,8 @@ const UserContextProvider = (props) => {
         setEditingPost,
         editingOffer,
         setEditingOffer,
+        viewingOffer,
+        setViewingOffer,
         storePost,
         posts,
         setPosts,

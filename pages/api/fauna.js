@@ -26,6 +26,10 @@ offers {
 		_id
 		username
 	}
+}
+acceptedOffer {
+	_id
+	username
 }`;
 
 // User data request data used by getUserByEmail and readUser
@@ -195,7 +199,7 @@ export const deletePost = async ({ id }, secret) => {
 export const createOffer = async ({ postId, userId }) => {
   console.info("createOffer request");
   return executeQuery(
-    `mutation AddOffer {
+    `mutation CreateOffer {
 			updatePost(id: "${postId}", data: {
 				offers: { connect: "${userId}"}
 			}) {
@@ -228,6 +232,43 @@ export const removeOffer = async ({ postId, userId }) => {
 					}
 				}
 				title
+			}
+		}`,
+    process.env.FAUNADB_SECRET_KEY
+  );
+};
+
+export const acceptOffer = async ({ postId, userId }) => {
+  console.info("acceptOffer request");
+  return executeQuery(
+    `mutation AcceptOffer {
+			updatePost(id: "${postId}", data: {
+				acceptedOffer: { connect: "${userId}"}
+				status: "taken"
+			}) {
+				_id
+				acceptedOffer {
+					_id
+					username
+				}
+				title
+				status
+			}
+		}`,
+    process.env.FAUNADB_SECRET_KEY
+  );
+};
+
+export const cancelOffer = async ({ postId, userId }) => {
+  console.info("cancelOffer request");
+  return executeQuery(
+    `mutation CancelOffer {
+			updatePost(id: "${postId}", data: {
+				status: "open"
+			}) {
+				_id
+				title
+				status
 			}
 		}`,
     process.env.FAUNADB_SECRET_KEY
@@ -328,11 +369,20 @@ const fauna = async (req, res) => {
       case "GET_USER_BY_EMAIL":
         result = await getUserByEmail(req.body, userSecret);
         break;
+      // ----------
+      // OFFERS
+      // ----------
       case "CREATE_OFFER":
         result = await createOffer(req.body);
         break;
       case "REMOVE_OFFER":
         result = await removeOffer(req.body);
+        break;
+      case "ACCEPT_OFFER":
+        result = await acceptOffer(req.body);
+        break;
+      case "CANCEL_OFFER":
+        result = await cancelOffer(req.body);
         break;
       // ----------
       // POSTS

@@ -65,7 +65,7 @@ const PostPopup = () => {
       ...editingPost,
       ...fields,
       date: fields.date.toString(),
-      status: "OPEN",
+      status: "open",
       _id: tempId,
     };
 

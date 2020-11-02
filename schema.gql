@@ -12,6 +12,7 @@ type Post {
   description: String
   status: String
   offers: [User] @relation
+  acceptedOffer: User
 }
 
 type AuthPayload {
