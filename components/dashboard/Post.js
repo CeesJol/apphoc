@@ -155,10 +155,10 @@ const Post = ({ post }) => {
       ) : post.offers.data.find((offer) => offer._id === getUser()._id) ? (
         // You have already made an offer
         <a onClick={handleCancelOffer}>Cancel offer</a>
-      ) : (
+      ) : post.status === "open" ? (
         // You haven't made an offer yet
         <a onClick={handleMakeOffer}>Make offer</a>
-      )}
+      ) : null}
     </div>
   );
 };
