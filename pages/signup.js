@@ -80,7 +80,7 @@ const Signup = () => {
               onChange={handleChangeEmail}
             />
 
-            <label htmlFor="username">Full name</label>
+            <label htmlFor="username">First name</label>
             <input
               type="text"
               id="username"
